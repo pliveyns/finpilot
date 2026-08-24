@@ -51,7 +51,7 @@ COPY --from=brew /system_files /oci/brew
 
 # Base Image - GNOME included (Fedora official OSTree desktop)
 # Renovate will keep the digest pin up to date.
-FROM quay.io/fedora-ostree-desktops/silverblue:44@sha256:74b476b978b4a30f74e690fff5d30d7818d9d40f5c093cc822c98386c7e75a3b
+FROM quay.io/fedora-ostree-desktops/silverblue:44@sha256:ca92f13f07342c30fbc043ad294444f13779585b0f4d27f53ea0cb8f4b637c4b
 
 # Image identity - these define how bootc, fastfetch, and the ublue ecosystem
 # recognize your image. Change these to match your project name.
@@ -77,7 +77,9 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/build/00-image-info.sh
 
 # Set dnf options before build scripts (persists across subsequent RUN layers)
-RUN dnf5 config-manager setopt keepcache=1 install_weak_deps=0
+RUN cp /etc/dnf/dnf.conf /etc/dnf/dnf.conf.tmp \
+    && mv /etc/dnf/dnf.conf.tmp /etc/dnf/dnf.conf \
+    && dnf5 config-manager setopt keepcache=1 install_weak_deps=0
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache/libdnf5 \
