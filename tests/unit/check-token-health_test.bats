@@ -23,7 +23,7 @@ setup() {
     CURL_ARGS="${WORKDIR}/curl_args"
 
     cat >"${WORKDIR}/bin/curl" <<'MOCK'
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # Record the invocation, emit the fixture headers to curl's -D target, and
 # print the stubbed HTTP status on stdout (the script uses -o /dev/null -w).
 printf '%s\n' "$*" >>"${CURL_ARGS}"
